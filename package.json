@@ -10,6 +10,7 @@
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
     "seed": "tsx scripts/seed.ts",
+    "reset:admin": "tsx scripts/reset-admin-password.ts",
     "worker:ocr": "tsx scripts/ocr-worker.ts"
   },
   "dependencies": {
