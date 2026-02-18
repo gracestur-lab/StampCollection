@@ -1,0 +1,69 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum ThemeTaxonomy {
+  ANIMALS
+  FLOWERS
+  HISTORICAL
+  ARCHITECTURE
+  TRANSPORT
+  HOLIDAYS
+  SPACE
+  SPORTS
+}
+
+enum OcrJobStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String?
+  passwordHash String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Stamp {
+  id                  Int           @id @default(autoincrement())
+  name                String
+  year                Int?
+  scottNumber         String?
+  faceValue           String?
+  theme               ThemeTaxonomy?
+  themeTags           String?
+  dominantColors      String?
+  imagePath           String
+  confidenceYear      Float?
+  confidenceScottNumber Float?
+  confidenceFaceValue Float?
+  confidenceTheme     Float?
+  confidenceColors    Float?
+  needsReview         Boolean       @default(true)
+  createdAt           DateTime      @default(now())
+  updatedAt           DateTime      @updatedAt
+  ocrJobs             OcrJob[]
+}
+
+model OcrJob {
+  id          Int          @id @default(autoincrement())
+  stampId     Int
+  status      OcrJobStatus @default(PENDING)
+  error       String?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  completedAt DateTime?
+  stamp       Stamp        @relation(fields: [stampId], references: [id], onDelete: Cascade)
+
+  @@index([status, createdAt])
+}
