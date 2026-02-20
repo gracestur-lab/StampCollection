@@ -2,8 +2,13 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 const protectedRoutes = ["/dashboard", "/api/stamps"];
+const authDisabled = process.env.AUTH_DISABLED === "true";
 
 export function middleware(request: NextRequest) {
+  if (authDisabled) {
+    return NextResponse.next();
+  }
+
   const { pathname } = request.nextUrl;
   const needsAuth = protectedRoutes.some((route) => pathname.startsWith(route));
 
