@@ -1,9 +1,9 @@
 import LoginForm from "@/components/LoginForm";
 import { redirect } from "next/navigation";
-import { AUTH_DISABLED } from "@/lib/session";
 
 export default function LoginPage() {
-  if (AUTH_DISABLED) {
+  const authDisabled = process.env.AUTH_DISABLED === "true";
+  if (authDisabled) {
     redirect("/dashboard");
   }
 
